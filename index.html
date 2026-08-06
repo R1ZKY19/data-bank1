@@ -48,10 +48,7 @@
                         <i data-lucide="database"></i>
                         <span>Data Bank</span>
                     </div>
-                    <div class="nav-item" data-page="tambah-data">
-                        <i data-lucide="plus-circle"></i>
-                        <span>Tambah Data</span>
-                    </div>
+                    <!-- HAPUS: Tambah Data dari sini -->
                     <div class="nav-item" data-page="riwayat">
                         <i data-lucide="history"></i>
                         <span>Riwayat</span>
@@ -227,94 +224,6 @@
                                     <i data-lucide="chevron-right"></i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ============ TAMBAH DATA PAGE ============ -->
-                <div class="page" id="page-tambah-data">
-                    <div class="form-container">
-                        <div class="card">
-                            <h2 style="margin-bottom:24px;">
-                                <i data-lucide="plus-circle" style="width:24px;height:24px;display:inline-block;vertical-align:middle;"></i>
-                                Tambah Data Bank
-                            </h2>
-                            <form id="addDataForm">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label>Bank <span class="required">*</span></label>
-                                        <input type="text" id="bank" name="bank" placeholder="Contoh: BCA" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Group <span class="required">*</span></label>
-                                        <input type="text" id="group" name="group" placeholder="Contoh: Group A" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nama Rekening <span class="required">*</span></label>
-                                        <input type="text" id="nama" name="nama" placeholder="Nama pemilik rekening" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nomor Rekening <span class="required">*</span></label>
-                                        <input type="text" id="noRekening" name="noRekening" placeholder="Contoh: 1234567890" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nomor HP <span class="required">*</span></label>
-                                        <input type="text" id="noHP" name="noHP" placeholder="Contoh: 081234567890" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Masa Aktif <span class="required">*</span></label>
-                                        <input type="date" id="masaAktif" name="masaAktif" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Status <span class="required">*</span></label>
-                                        <select id="status" name="status" required>
-                                            <option value="Aktif">Aktif</option>
-                                            <option value="Expired">Expired</option>
-                                            <option value="Nonaktif">Nonaktif</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Tanggal Cek</label>
-                                        <input type="date" id="tanggalCek" name="tanggalCek">
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-top:20px;">
-                                    <div class="form-group">
-                                        <label>User ID</label>
-                                        <input type="text" id="userId" name="userId" placeholder="User ID Internet Banking">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>PIN Login</label>
-                                        <input type="password" id="pinLogin" name="pinLogin" placeholder="PIN Login">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>PIN Proses</label>
-                                        <input type="password" id="pinProses" name="pinProses" placeholder="PIN Proses">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>ID IB</label>
-                                        <input type="text" id="idIb" name="idIb" placeholder="ID Internet Banking">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password IB</label>
-                                        <input type="password" id="passwordIb" name="passwordIb" placeholder="Password Internet Banking">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Catatan</label>
-                                        <textarea id="catatan" name="catatan" rows="3" placeholder="Catatan tambahan..."></textarea>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i data-lucide="save"></i> Simpan Data
-                                    </button>
-                                    <button type="reset" class="btn btn-outline">
-                                        <i data-lucide="rotate-ccw"></i> Reset
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -560,6 +469,100 @@
                     <i data-lucide="loader-circle" class="spin" style="width:40px;height:40px;margin:0 auto 8px;display:block;"></i>
                     Memuat data...
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Tambah Data -->
+    <div class="modal-overlay" id="addDataModal">
+        <div class="modal" style="max-width:700px;max-height:90vh;overflow-y:auto;">
+            <div class="modal-header">
+                <h3>
+                    <i data-lucide="plus-circle" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
+                    Tambah Data Bank
+                </h3>
+                <button class="modal-close" id="closeAddDataModal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addDataFormModal">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Bank <span class="required">*</span></label>
+                            <input type="text" id="modalBank" name="bank" placeholder="Contoh: BCA" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Group <span class="required">*</span></label>
+                            <input type="text" id="modalGroup" name="group" placeholder="Contoh: Group A" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Rekening <span class="required">*</span></label>
+                            <input type="text" id="modalNama" name="nama" placeholder="Nama pemilik rekening" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Rekening <span class="required">*</span></label>
+                            <input type="text" id="modalNoRekening" name="noRekening" placeholder="Contoh: 1234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor HP <span class="required">*</span></label>
+                            <input type="text" id="modalNoHP" name="noHP" placeholder="Contoh: 081234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Masa Aktif <span class="required">*</span></label>
+                            <input type="date" id="modalMasaAktif" name="masaAktif" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Status <span class="required">*</span></label>
+                            <select id="modalStatus" name="status" required>
+                                <option value="Aktif">Aktif</option>
+                                <option value="Expired">Expired</option>
+                                <option value="Nonaktif">Nonaktif</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Cek</label>
+                            <input type="date" id="modalTanggalCek" name="tanggalCek">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:16px;border-top:1px solid var(--gray-200);padding-top:16px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div class="form-group">
+                                <label>User ID</label>
+                                <input type="text" id="modalUserId" name="userId" placeholder="User ID Internet Banking">
+                            </div>
+                            <div class="form-group">
+                                <label>PIN Login</label>
+                                <input type="password" id="modalPinLogin" name="pinLogin" placeholder="PIN Login">
+                            </div>
+                            <div class="form-group">
+                                <label>PIN Proses</label>
+                                <input type="password" id="modalPinProses" name="pinProses" placeholder="PIN Proses">
+                            </div>
+                            <div class="form-group">
+                                <label>ID IB</label>
+                                <input type="text" id="modalIdIb" name="idIb" placeholder="ID Internet Banking">
+                            </div>
+                            <div class="form-group" style="grid-column:1/-1;">
+                                <label>Password IB</label>
+                                <input type="password" id="modalPasswordIb" name="passwordIb" placeholder="Password Internet Banking">
+                            </div>
+                            <div class="form-group" style="grid-column:1/-1;">
+                                <label>Catatan</label>
+                                <textarea id="modalCatatan" name="catatan" rows="2" placeholder="Catatan tambahan..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelAddData">
+                    <i data-lucide="x"></i> Batal
+                </button>
+                <button class="btn btn-primary" id="submitAddData">
+                    <i data-lucide="save"></i> Simpan Data
+                </button>
             </div>
         </div>
     </div>
