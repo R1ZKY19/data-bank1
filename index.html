@@ -4,204 +4,233 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank Management Dashboard</title>
-    
-    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563EB">
+    <meta name="description" content="Professional Bank Management Dashboard">
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/login.css">
     <link rel="stylesheet" href="css/dashboard.css">
-    
-    <!-- Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563EB">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-    <div id="app">
-        <!-- ============ SIDEBAR ============ -->
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-wrapper">
+            <div class="login-card glass-effect">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                            <rect width="48" height="48" rx="12" fill="#2563EB"/>
+                            <path d="M24 14L34 20V28L24 34L14 28V20L24 14Z" stroke="white" stroke-width="2"/>
+                            <path d="M24 14V34" stroke="white" stroke-width="2"/>
+                            <path d="M14 20L24 26L34 20" stroke="white" stroke-width="2"/>
+                        </svg>
+                        <h1>Bank Management</h1>
+                    </div>
+                    <p class="login-subtitle">Masuk ke dashboard manajemen data bank</p>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <div class="input-icon">
+                            <i data-lucide="user" class="icon"></i>
+                            <input type="text" id="username" placeholder="Masukkan username" required autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-icon">
+                            <i data-lucide="lock" class="icon"></i>
+                            <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                                <i data-lucide="eye" class="icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Ingat saya
+                        </label>
+                        <a href="#" class="forgot-link">Lupa password?</a>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">
+                        <i data-lucide="log-in" class="icon"></i>
+                        Masuk
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardPage" style="display: none;">
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <i data-lucide="building2"></i>
-                    </div>
-                    <span class="logo-text">BankManager</span>
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="#2563EB"/>
+                        <path d="M16 9L22 14V20L16 24L10 20V14L16 9Z" stroke="white" stroke-width="2"/>
+                        <path d="M16 9V24" stroke="white" stroke-width="2"/>
+                        <path d="M10 14L16 18L22 14" stroke="white" stroke-width="2"/>
+                    </svg>
+                    <span>Bank<span class="highlight">Manager</span></span>
                 </div>
-                <button class="sidebar-toggle" id="sidebarToggle">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">
                     <i data-lucide="chevron-left"></i>
                 </button>
             </div>
-            
             <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <div class="nav-item active" data-page="dashboard">
-                        <i data-lucide="layout-dashboard"></i>
-                        <span>Dashboard</span>
-                    </div>
-                    <div class="nav-item" data-page="data-bank">
-                        <i data-lucide="database"></i>
-                        <span>Data Bank</span>
-                    </div>
-                    <div class="nav-item" data-page="riwayat">
-                        <i data-lucide="history"></i>
-                        <span>Riwayat</span>
-                    </div>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-item" data-page="import">
-                        <i data-lucide="upload"></i>
-                        <span>Import</span>
-                    </div>
-                    <div class="nav-item" data-page="export">
-                        <i data-lucide="download"></i>
-                        <span>Export</span>
-                    </div>
-                    <div class="nav-item" data-page="laporan">
-                        <i data-lucide="file-text"></i>
-                        <span>Laporan</span>
-                    </div>
-                </div>
-                
-                <div class="nav-section">
-                    <div class="nav-item admin-only" data-page="pengguna">
-                        <i data-lucide="users"></i>
-                        <span>Pengguna</span>
-                    </div>
-                    <div class="nav-item admin-only" data-page="pengaturan">
-                        <i data-lucide="settings"></i>
-                        <span>Pengaturan</span>
-                    </div>
-                    <div class="nav-item" data-page="profil">
-                        <i data-lucide="user"></i>
-                        <span>Profil</span>
-                    </div>
-                </div>
-                
-                <div class="nav-section bottom">
-                    <div class="nav-item logout" id="logoutBtn">
-                        <i data-lucide="log-out"></i>
-                        <span>Logout</span>
-                    </div>
-                </div>
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#data" class="nav-item" data-page="data">
+                    <i data-lucide="database"></i>
+                    <span>Data Bank</span>
+                </a>
+                <a href="#tambah" class="nav-item" data-page="tambah">
+                    <i data-lucide="plus-circle"></i>
+                    <span>Tambah Data</span>
+                </a>
+                <a href="#riwayat" class="nav-item" data-page="riwayat">
+                    <i data-lucide="clock"></i>
+                    <span>Riwayat</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#import" class="nav-item" data-page="import">
+                    <i data-lucide="upload"></i>
+                    <span>Import</span>
+                </a>
+                <a href="#export" class="nav-item" data-page="export">
+                    <i data-lucide="download"></i>
+                    <span>Export</span>
+                </a>
+                <a href="#laporan" class="nav-item" data-page="laporan">
+                    <i data-lucide="file-bar-chart"></i>
+                    <span>Laporan</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#pengguna" class="nav-item" data-page="pengguna">
+                    <i data-lucide="users"></i>
+                    <span>Pengguna</span>
+                </a>
+                <a href="#pengaturan" class="nav-item" data-page="pengaturan">
+                    <i data-lucide="settings"></i>
+                    <span>Pengaturan</span>
+                </a>
+                <a href="#profil" class="nav-item" data-page="profil">
+                    <i data-lucide="user-circle"></i>
+                    <span>Profil</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item logout" onclick="logout()">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </a>
             </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="avatar" id="userAvatar">L</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Leader</span>
+                        <span class="user-role" id="userRole">Administrator</span>
+                    </div>
+                </div>
+            </div>
         </aside>
-        
-        <!-- ============ MAIN CONTENT ============ -->
+
+        <!-- Main Content -->
         <main class="main-content">
             <!-- Top Bar -->
-            <header class="top-bar">
-                <div class="top-bar-left">
-                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
                         <i data-lucide="menu"></i>
                     </button>
-                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                    <h2 class="page-title" id="pageTitle">Dashboard</h2>
                 </div>
-                <div class="top-bar-right">
-                    <div class="search-box">
-                        <i data-lucide="search"></i>
-                        <input type="text" placeholder="Cari data..." id="globalSearch">
+                <div class="topbar-right">
+                    <div class="search-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="globalSearch" placeholder="Cari data..." class="search-input">
                     </div>
-                    <div class="top-bar-actions">
-                        <button class="icon-btn" id="notifBtn">
-                            <i data-lucide="bell"></i>
-                            <span class="badge" id="notifBadge">0</span>
-                        </button>
-                        <div class="user-profile">
-                            <div class="avatar" id="userAvatar">
-                                <span id="userInitial">A</span>
-                            </div>
-                            <div class="user-info">
-                                <span class="user-name" id="userName">Admin</span>
-                                <span class="user-role" id="userRole">LEADER</span>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="icon-btn" onclick="refreshData()">
+                        <i data-lucide="refresh-cw"></i>
+                    </button>
+                    <button class="icon-btn notification-btn">
+                        <i data-lucide="bell"></i>
+                        <span class="badge">3</span>
+                    </button>
                 </div>
             </header>
-            
+
             <!-- Page Content -->
-            <div class="page-content" id="pageContent">
-                
-                <!-- ========== DASHBOARD ========== -->
-                <div class="page active" id="page-dashboard">
+            <div class="content">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page-content active">
                     <div class="stats-grid" id="statsGrid">
-                        <!-- Stats will be rendered by JS -->
+                        <!-- Stats cards will be rendered by JS -->
                     </div>
-                    
                     <div class="charts-grid">
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3>Data per Bank</h3>
-                            </div>
+                        <div class="chart-card glass-effect">
+                            <h3>Data per Bank</h3>
                             <canvas id="bankChart"></canvas>
                         </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3>Data per Status</h3>
-                            </div>
+                        <div class="chart-card glass-effect">
+                            <h3>Data per Status</h3>
                             <canvas id="statusChart"></canvas>
                         </div>
                     </div>
-                    
-                    <div class="chart-card full">
-                        <div class="chart-header">
-                            <h3>Data per Group</h3>
-                        </div>
-                        <canvas id="groupChart"></canvas>
+                    <div class="recent-activity glass-effect">
+                        <h3>Aktivitas Terbaru</h3>
+                        <div id="recentActivityList"></div>
                     </div>
                 </div>
-                
-                <!-- ========== DATA BANK ========== -->
-                <div class="page" id="page-data-bank">
-                    <div class="table-toolbar">
+
+                <!-- Data Page -->
+                <div id="page-data" class="page-content">
+                    <div class="data-toolbar">
                         <div class="toolbar-left">
+                            <button class="btn-primary" onclick="openAddModal()">
+                                <i data-lucide="plus"></i> Tambah Data
+                            </button>
+                            <button class="btn-outline" onclick="refreshTable()">
+                                <i data-lucide="refresh-cw"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="toolbar-right">
                             <div class="filter-group">
                                 <select id="filterBank" class="filter-select">
                                     <option value="">Semua Bank</option>
-                                </select>
-                                <select id="filterGroup" class="filter-select">
-                                    <option value="">Semua Group</option>
                                 </select>
                                 <select id="filterStatus" class="filter-select">
                                     <option value="">Semua Status</option>
                                     <option value="Aktif">Aktif</option>
                                     <option value="Expired">Expired</option>
+                                    <option value="Pending">Pending</option>
                                     <option value="Nonaktif">Nonaktif</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="toolbar-right">
-                            <button class="btn btn-primary" id="refreshData">
-                                <i data-lucide="refresh-cw"></i>
-                                Refresh
-                            </button>
-                            <button class="btn btn-success" id="addDataBtn">
-                                <i data-lucide="plus"></i>
-                                Tambah Data
-                            </button>
-                        </div>
                     </div>
-                    
-                    <div class="table-container">
-                        <table class="data-table" id="dataTable">
+                    <div class="table-container glass-effect">
+                        <table id="dataTable">
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Bank</th>
                                     <th>Group</th>
                                     <th>Nama Rekening</th>
-                                    <th>Nomor Rekening</th>
-                                    <th>Nomor HP</th>
+                                    <th>No Rekening</th>
+                                    <th>No HP</th>
                                     <th>Masa Aktif</th>
                                     <th>Status</th>
                                     <th>Sisa Hari</th>
@@ -213,383 +242,47 @@
                                 <!-- Data will be rendered by JS -->
                             </tbody>
                         </table>
-                        
                         <div class="table-footer">
-                            <div class="table-info">
-                                Menampilkan <span id="startRow">1</span> - <span id="endRow">10</span> dari <span id="totalRows">0</span> data
-                            </div>
-                            <div class="table-pagination">
-                                <button class="pagination-btn" id="prevPage" disabled>
-                                    <i data-lucide="chevron-left"></i>
-                                </button>
-                                <span id="currentPage">1 / 1</span>
-                                <button class="pagination-btn" id="nextPage">
-                                    <i data-lucide="chevron-right"></i>
-                                </button>
+                            <span id="dataCount">0 data</span>
+                            <div class="pagination" id="pagination">
+                                <!-- Pagination controls -->
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- ========== RIWAYAT ========== -->
-                <div class="page" id="page-riwayat">
-                    <div class="card">
-                        <h3 style="margin-bottom:16px;">
-                            <i data-lucide="history" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                            Riwayat Aktivitas
-                        </h3>
-                        <div class="table-container">
-                            <table class="data-table" id="riwayatTable">
-                                <thead>
-                                    <tr>
-                                        <th>Tanggal</th>
-                                        <th>User</th>
-                                        <th>Role</th>
-                                        <th>Aktivitas</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="riwayatBody">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-8 text-gray-500">
-                                            <i data-lucide="inbox" style="width:40px;height:40px;margin:0 auto 8px;display:block;"></i>
-                                            Belum ada riwayat
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== IMPORT ========== -->
-                <div class="page" id="page-import">
-                    <div class="card">
-                        <h3 style="margin-bottom:16px;">
-                            <i data-lucide="upload" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                            Import Data
-                        </h3>
-                        <div class="import-drop-zone" id="dropZone">
-                            <i data-lucide="upload" style="width:48px;height:48px;color:var(--gray-400);"></i>
-                            <p style="margin-top:12px;font-weight:500;">Drop file di sini atau klik untuk upload</p>
-                            <p style="font-size:13px;color:var(--gray-500);margin-top:4px;">
-                                Support: .xlsx, .xls, .csv
-                            </p>
-                            <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none;">
-                        </div>
-                        
-                        <div id="importPreview" style="display:none;margin-top:20px;">
-                            <h4 style="margin-bottom:12px;">Preview Data</h4>
-                            <div class="table-container" style="max-height:300px;overflow-y:auto;">
-                                <table class="data-table" id="previewTable">
-                                    <thead id="previewHead"></thead>
-                                    <tbody id="previewBody"></tbody>
-                                </table>
-                            </div>
-                            <div style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                                <span id="importStats" style="font-weight:500;">0 data siap diimport</span>
-                                <button class="btn btn-primary" id="importBtn" disabled>
-                                    <i data-lucide="upload"></i> Import Data
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== EXPORT ========== -->
-                <div class="page" id="page-export">
-                    <div class="card">
-                        <h3 style="margin-bottom:16px;">
-                            <i data-lucide="download" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                            Export Data
-                        </h3>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
-                            <button class="btn btn-primary btn-lg" onclick="ImportExport.exportExcel()" style="padding:32px;flex-direction:column;gap:12px;">
-                                <i data-lucide="file-spreadsheet" style="width:40px;height:40px;"></i>
-                                <span>Export Excel</span>
-                            </button>
-                            <button class="btn btn-success btn-lg" onclick="ImportExport.exportCSV()" style="padding:32px;flex-direction:column;gap:12px;">
-                                <i data-lucide="file-text" style="width:40px;height:40px;"></i>
-                                <span>Export CSV</span>
-                            </button>
-                            <button class="btn btn-warning btn-lg" onclick="window.print()" style="padding:32px;flex-direction:column;gap:12px;background:#F59E0B;color:white;">
-                                <i data-lucide="printer" style="width:40px;height:40px;"></i>
-                                <span>Print / PDF</span>
-                            </button>
-                            <button class="btn btn-danger btn-lg admin-only" onclick="ImportExport.createBackup()" style="padding:32px;flex-direction:column;gap:12px;background:#DC2626;color:white;">
-                                <i data-lucide="archive" style="width:40px;height:40px;"></i>
-                                <span>Backup Database</span>
-                            </button>
-                            <button class="btn btn-outline btn-lg admin-only" onclick="ImportExport.restoreBackup()" style="padding:32px;flex-direction:column;gap:12px;">
-                                <i data-lucide="rotate-ccw" style="width:40px;height:40px;"></i>
-                                <span>Restore Backup</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== LAPORAN ========== -->
-                <div class="page" id="page-laporan">
-                    <div class="card">
-                        <h3 style="margin-bottom:16px;">
-                            <i data-lucide="file-text" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                            Laporan Data
-                        </h3>
-                        <div id="laporanContent">
-                            <p class="text-gray-500 text-center py-8">Laporan akan ditampilkan di sini</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== PENGGUNA ========== -->
-                <div class="page admin-only" id="page-pengguna">
-                    <div class="card">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
-                            <h3>
-                                <i data-lucide="users" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                                Kelola Pengguna
-                            </h3>
-                            <button class="btn btn-primary" onclick="Forms.showAddUserModal()">
-                                <i data-lucide="plus"></i> Tambah User
-                            </button>
-                        </div>
-                        <div class="table-container">
-                            <table class="data-table" id="userTable">
-                                <thead>
-                                    <tr>
-                                        <th>Username</th>
-                                        <th>Nama</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="userBody">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-8 text-gray-500">
-                                            <i data-lucide="users" style="width:40px;height:40px;margin:0 auto 8px;display:block;"></i>
-                                            Belum ada user
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== PENGATURAN ========== -->
-                <div class="page admin-only" id="page-pengaturan">
-                    <div class="card">
-                        <h3 style="margin-bottom:16px;">
-                            <i data-lucide="settings" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                            Pengaturan Sistem
-                        </h3>
-                        <div style="display:grid;gap:16px;max-width:600px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--gray-50);border-radius:12px;">
-                                <div>
-                                    <div style="font-weight:600;">Auto Refresh</div>
-                                    <div style="font-size:13px;color:var(--gray-500);">Refresh data otomatis setiap 60 detik</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="autoRefresh" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--gray-50);border-radius:12px;">
-                                <div>
-                                    <div style="font-weight:600;">Notifikasi</div>
-                                    <div style="font-size:13px;color:var(--gray-500);">Aktifkan notifikasi sistem</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="notifications" checked>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--gray-50);border-radius:12px;">
-                                <div>
-                                    <div style="font-weight:600;">Dark Mode</div>
-                                    <div style="font-size:13px;color:var(--gray-500);">Mode tampilan gelap</div>
-                                </div>
-                                <label class="toggle-switch">
-                                    <input type="checkbox" id="darkMode">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ========== PROFIL ========== -->
-                <div class="page" id="page-profil">
-                    <div class="card" style="max-width:600px;margin:0 auto;">
-                        <div style="text-align:center;padding:24px 0;">
-                            <div class="avatar" style="width:80px;height:80px;font-size:32px;margin:0 auto;background:linear-gradient(135deg,var(--primary),var(--primary-dark));">
-                                <span id="profileInitial">A</span>
-                            </div>
-                            <h3 style="margin-top:16px;" id="profileName">Administrator</h3>
-                            <p style="color:var(--gray-500);" id="profileRole">LEADER</p>
-                        </div>
-                        <div style="border-top:1px solid var(--gray-200);padding-top:20px;">
-                            <div style="display:grid;gap:12px;">
-                                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);">
-                                    <span style="color:var(--gray-500);">Username</span>
-                                    <span id="profileUsername" style="font-weight:500;">admin</span>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);">
-                                    <span style="color:var(--gray-500);">Role</span>
-                                    <span id="profileRoleText" style="font-weight:500;">LEADER</span>
-                                </div>
-                                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);">
-                                    <span style="color:var(--gray-500);">Login Terakhir</span>
-                                    <span id="profileLastLogin" style="font-weight:500;">-</span>
-                                </div>
-                            </div>
-                            <div style="margin-top:20px;display:flex;gap:12px;">
-                                <button class="btn btn-primary" onclick="Forms.changePassword()">
-                                    <i data-lucide="key"></i> Ganti Password
-                                </button>
-                                <button class="btn btn-danger" id="logoutBtn2">
-                                    <i data-lucide="log-out"></i> Logout
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </div><!-- end page-content -->
+
+                <!-- Other pages will be similar structure -->
+            </div>
         </main>
-        
-        <!-- ============ DRAWER ============ -->
-        <div class="drawer-overlay" id="drawerOverlay"></div>
-        <div class="drawer" id="drawer">
+    </div>
+
+    <!-- Detail Drawer -->
+    <div id="detailDrawer" class="drawer">
+        <div class="drawer-overlay" onclick="closeDrawer()"></div>
+        <div class="drawer-content">
             <div class="drawer-header">
                 <h3>Detail Data</h3>
-                <button class="drawer-close" id="drawerClose">
+                <button class="drawer-close" onclick="closeDrawer()">
                     <i data-lucide="x"></i>
                 </button>
             </div>
             <div class="drawer-body" id="drawerBody">
-                <div class="text-center py-8 text-gray-500">
-                    <i data-lucide="loader-circle" class="spin" style="width:40px;height:40px;margin:0 auto 8px;display:block;"></i>
-                    Memuat data...
-                </div>
+                <!-- Detail content -->
             </div>
         </div>
-        
-        <!-- ============ MODAL TAMBAH DATA ============ -->
-        <div class="modal-overlay" id="addDataModal">
-            <div class="modal" style="max-width:700px;max-height:90vh;overflow-y:auto;">
-                <div class="modal-header">
-                    <h3>
-                        <i data-lucide="plus-circle" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                        Tambah Data Bank
-                    </h3>
-                    <button class="modal-close" id="closeAddDataModal">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="addDataFormModal">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Bank <span class="required">*</span></label>
-                                <input type="text" id="modalBank" name="bank" placeholder="Contoh: BCA" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Group <span class="required">*</span></label>
-                                <input type="text" id="modalGroup" name="group" placeholder="Contoh: Group A" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Nama Rekening <span class="required">*</span></label>
-                                <input type="text" id="modalNama" name="nama" placeholder="Nama pemilik rekening" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Nomor Rekening <span class="required">*</span></label>
-                                <input type="text" id="modalNoRekening" name="noRekening" placeholder="Contoh: 1234567890" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Nomor HP <span class="required">*</span></label>
-                                <input type="text" id="modalNoHP" name="noHP" placeholder="Contoh: 081234567890" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Masa Aktif <span class="required">*</span></label>
-                                <input type="date" id="modalMasaAktif" name="masaAktif" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Status <span class="required">*</span></label>
-                                <select id="modalStatus" name="status" required>
-                                    <option value="Aktif">Aktif</option>
-                                    <option value="Expired">Expired</option>
-                                    <option value="Nonaktif">Nonaktif</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Tanggal Cek</label>
-                                <input type="date" id="modalTanggalCek" name="tanggalCek">
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top:16px;border-top:1px solid var(--gray-200);padding-top:16px;">
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                                <div class="form-group">
-                                    <label>User ID</label>
-                                    <input type="text" id="modalUserId" name="userId" placeholder="User ID Internet Banking">
-                                </div>
-                                <div class="form-group">
-                                    <label>PIN Login</label>
-                                    <input type="password" id="modalPinLogin" name="pinLogin" placeholder="PIN Login">
-                                </div>
-                                <div class="form-group">
-                                    <label>PIN Proses</label>
-                                    <input type="password" id="modalPinProses" name="pinProses" placeholder="PIN Proses">
-                                </div>
-                                <div class="form-group">
-                                    <label>ID IB</label>
-                                    <input type="text" id="modalIdIb" name="idIb" placeholder="ID Internet Banking">
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label>Password IB</label>
-                                    <input type="password" id="modalPasswordIb" name="passwordIb" placeholder="Password Internet Banking">
-                                </div>
-                                <div class="form-group" style="grid-column:1/-1;">
-                                    <label>Catatan</label>
-                                    <textarea id="modalCatatan" name="catatan" rows="2" placeholder="Catatan tambahan..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-outline" id="cancelAddData">
-                        <i data-lucide="x"></i> Batal
-                    </button>
-                    <button class="btn btn-primary" id="submitAddData">
-                        <i data-lucide="save"></i> Simpan Data
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-    </div><!-- end app -->
+    </div>
+
+    <!-- Loading Skeleton -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
-    <!-- ============ JAVASCRIPT ============ -->
-    <script src="js/utils.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/data-table.js"></script>
-    <script src="js/drawer.js"></script>
-    <script src="js/forms.js"></script>
-    <script src="js/import-export.js"></script>
-    <script src="js/app.js"></script>
-    
-    <script>
-        // Initialize Lucide icons after DOM loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
-            console.log('✅ BankManager Dashboard loaded successfully!');
-            console.log('🔗 Google Apps Script URL: https://script.google.com/macros/s/AKfycbw0H8cbgkuxhravOnkLTqta6Js5QZ8_o85BW-y1Pjjk0c1J76ZSHmBWxznTsI6wHP1j/exec');
-        });
-    </script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
