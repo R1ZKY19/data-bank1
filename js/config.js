@@ -1,7 +1,9 @@
 // config.js - Configuration
 export const CONFIG = {
-    // Ganti dengan URL Google Apps Script deployment Anda
     API_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+    SESSION_TIMEOUT: 30 * 60 * 1000,
+    PAGINATION_LIMIT: 20
+};
     
     APP_NAME: 'Bank Management Dashboard',
     APP_VERSION: '1.0.0',
