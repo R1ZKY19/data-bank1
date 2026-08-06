@@ -6,7 +6,7 @@
 const AUTH = {
     SESSION_KEY: 'bankSession',
     AUTO_LOGOUT_TIME: 30 * 60 * 1000, // 30 minutes
-    API_URL: 'https://script.google.com/macros/s/AKfycbwbi71J0-KxP-ybSA5h9Euff1s2vxe4Ld6gQTTq7JdYl8W7QJ0vaDQ7CDPav47LyazG/exec', // Google Apps Script URL
+    API_URL: 'https://script.google.com/macros/s/AKfycbwgULfYkvdWKYft17Gw57cRRM8_cIX0k3WPJhr0eF6YG6MhewTK_9e647H-KkDRQ2Fl/exec', // Google Apps Script URL
     
     /**
      * Initialize authentication
