@@ -1,147 +1,277 @@
-/* Modal Styles - Tambahkan di components.css */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    z-index: 3000;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 16px;
-    overflow-y: auto;
-}
+/**
+ * Main Application Module
+ */
 
-.modal-overlay.active {
-    display: flex;
-}
-
-.modal-overlay .modal {
-    background: white;
-    border-radius: var(--border-radius);
-    max-width: 700px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-2xl);
-    animation: slideInRight 0.3s ease-out;
-    margin: auto;
-}
-
-.modal-overlay .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--gray-200);
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 1;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-}
-
-.modal-overlay .modal-header h3 {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.modal-overlay .modal-close {
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: var(--gray-100);
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-500);
-    transition: var(--transition);
-}
-
-.modal-overlay .modal-close:hover {
-    background: var(--gray-200);
-}
-
-.modal-overlay .modal-body {
-    padding: 24px;
-}
-
-.modal-overlay .modal-footer {
-    padding: 16px 24px;
-    border-top: 1px solid var(--gray-200);
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    position: sticky;
-    bottom: 0;
-    background: white;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-}
-
-/* Form dalam modal */
-.modal-overlay .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.modal-overlay .form-group {
-    margin-bottom: 0;
-}
-
-.modal-overlay .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-700);
-    margin-bottom: 4px;
-}
-
-.modal-overlay .form-group .required {
-    color: var(--danger);
-}
-
-.modal-overlay .form-group input,
-.modal-overlay .form-group select,
-.modal-overlay .form-group textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: inherit;
-    color: var(--dark);
-    transition: var(--transition);
-    background: white;
-}
-
-.modal-overlay .form-group input:focus,
-.modal-overlay .form-group select:focus,
-.modal-overlay .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.05);
-}
-
-.modal-overlay .form-group input.error,
-.modal-overlay .form-group select.error,
-.modal-overlay .form-group textarea.error {
-    border-color: var(--danger);
-}
-
-@media (max-width: 640px) {
-    .modal-overlay .form-grid {
-        grid-template-columns: 1fr;
-    }
+const App = {
+    currentPage: 'dashboard',
     
-    .modal-overlay {
-        padding: 16px;
-        align-items: center;
-    }
+    /**
+     * Initialize application
+     */
+    init() {
+        console.log('App initializing...');
+        
+        // Check authentication
+        if (!AUTH.checkSession()) {
+            console.log('Not authenticated, redirecting to login');
+            return;
+        }
+        
+        console.log('User authenticated');
+        
+        // Initialize components
+        this.initSidebar();
+        this.initNavigation();
+        this.initSearch();
+        this.initDrawer();
+        this.initModules();
+        this.setupGlobalEvents();
+        
+        // Load initial data
+        this.loadData();
+        
+        console.log('App initialized successfully');
+    },
     
-    .modal-overlay .modal {
-        max-height: 95vh;
+    /**
+     * Initialize modules with error handling
+     */
+    initModules() {
+        try {
+            console.log('Initializing modules...');
+            
+            if (window.Dashboard) {
+                console.log('Dashboard init');
+                Dashboard.init();
+            } else {
+                console.warn('Dashboard not found');
+            }
+            
+            if (window.DataTable) {
+                console.log('DataTable init');
+                DataTable.init();
+            } else {
+                console.warn('DataTable not found');
+            }
+            
+            if (window.Forms) {
+                console.log('Forms init');
+                Forms.init();
+            } else {
+                console.warn('Forms not found');
+            }
+            
+            if (window.ImportExport) {
+                console.log('ImportExport init');
+                ImportExport.init();
+            } else {
+                console.warn('ImportExport not found');
+            }
+            
+            if (window.Drawer) {
+                console.log('Drawer init');
+                Drawer.init();
+            } else {
+                console.warn('Drawer not found');
+            }
+            
+            console.log('All modules initialized');
+        } catch (error) {
+            console.error('Error initializing modules:', error);
+        }
+    },
+    
+    /**
+     * Initialize sidebar
+     */
+    initSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        
+        console.log('Sidebar init');
+        
+        if (toggle) {
+            toggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                setTimeout(() => lucide.createIcons(), 100);
+            });
+        }
+        
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('mobile-open');
+            });
+        }
+    },
+    
+    /**
+     * Initialize navigation
+     */
+    initNavigation() {
+        const navItems = document.querySelectorAll('.nav-item[data-page]');
+        
+        console.log('Navigation init, items:', navItems.length);
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.dataset.page;
+                console.log('Navigating to:', page);
+                this.navigateTo(page);
+            });
+        });
+    },
+    
+    /**
+     * Navigate to page
+     */
+    navigateTo(page) {
+        console.log('Navigate to:', page);
+        this.currentPage = page;
+        
+        // Update nav items
+        document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+            item.classList.toggle('active', item.dataset.page === page);
+        });
+        
+        // Update pages
+        document.querySelectorAll('.page').forEach(p => {
+            p.classList.toggle('active', p.id === `page-${page}`);
+        });
+        
+        // Update title
+        const pageTitles = {
+            dashboard: 'Dashboard',
+            'data-bank': 'Data Bank',
+            riwayat: 'Riwayat',
+            import: 'Import Data',
+            export: 'Export Data',
+            laporan: 'Laporan',
+            pengguna: 'Pengelolaan Pengguna',
+            pengaturan: 'Pengaturan',
+            profil: 'Profil'
+        };
+        
+        const titleEl = document.getElementById('pageTitle');
+        if (titleEl) titleEl.textContent = pageTitles[page] || page;
+        
+        // Load specific page data
+        try {
+            if (page === 'pengguna' && window.Forms) {
+                Forms.loadUsers();
+            }
+            if (page === 'dashboard' && window.Dashboard) {
+                Dashboard.loadStats();
+            }
+            if (page === 'data-bank' && window.DataTable) {
+                DataTable.loadData();
+            }
+        } catch (error) {
+            console.error('Error loading page data:', error);
+        }
+    },
+    
+    /**
+     * Initialize search
+     */
+    initSearch() {
+        const searchInput = document.getElementById('globalSearch');
+        if (!searchInput) return;
+        
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const query = e.target.value.trim();
+                if (window.DataTable) {
+                    DataTable.search(query);
+                }
+            }, 300);
+        });
+    },
+    
+    /**
+     * Initialize drawer
+     */
+    initDrawer() {
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const closeBtn = document.getElementById('drawerClose');
+        
+        if (!drawer || !overlay) return;
+        
+        const closeDrawer = () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDrawer);
+        }
+        
+        overlay.addEventListener('click', closeDrawer);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
+        });
+        
+        // Make drawer functions globally available
+        window.closeDrawer = closeDrawer;
+    },
+    
+    /**
+     * Setup global events
+     */
+    setupGlobalEvents() {
+        // Logout handlers
+        document.querySelectorAll('#logoutBtn, #logoutBtn2').forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    if (window.AUTH) {
+                        AUTH.logout('Anda telah logout');
+                    }
+                });
+            }
+        });
+    },
+    
+    /**
+     * Load data
+     */
+    async loadData() {
+        console.log('Loading data...');
+        try {
+            if (window.Dashboard) {
+                await Dashboard.loadStats();
+            }
+            if (window.DataTable) {
+                await DataTable.loadData();
+            }
+            console.log('Data loaded successfully');
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
     }
-}
+};
+
+// Initialize app when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM ready, initializing App...');
+    try {
+        App.init();
+    } catch (error) {
+        console.error('Fatal error in App.init:', error);
+        // Show error message to user
+        document.body.innerHTML = `
+            <div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;padding:20px;text-align:center;font-family:Inter,sans-serif;">
+                <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+                <h2 style="color:#DC2626;">Error Memuat Aplikasi</h2>
+                <p style="color:#64748B;max-width:400px;">Terjadi kesalahan saat memuat aplikasi. Silakan refresh halaman atau cek console browser untuk detail.</p>
+                <button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;background:#2563EB;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">Refresh Halaman</button>
+                <pre style="margin-top:16px;background:#1E293B;color:#E2E8F0;padding:16px;border-radius:8px;max-width:600px;overflow:auto;font-size:12px;text-align:left;">${error.message}</pre>
+            </div>
+        `;
+    }
+});
