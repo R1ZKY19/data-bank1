@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bank Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            border-radius: 50%;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .login-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .login-logo-icon i {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #2563EB;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+        
+        .login-form input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .password-toggle:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .login-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 24px 0;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #2563EB;
+            cursor: pointer;
+        }
+        
+        .forgot-link {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-link:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2563EB, #1D4ED8);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .login-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+        }
+        
+        .alert-error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #EF4444;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .alert-error.show {
+            display: block;
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">
+                <div class="login-logo-icon">
+                    <i data-lucide="building2"></i>
+                </div>
+                <span class="login-title">BankManager</span>
+            </div>
+            <p class="login-subtitle">Sistem Manajemen Data Bank</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div id="loginError" class="alert-error">
+                <i data-lucide="alert-circle"></i>
+                <span id="errorMessage">Username atau password salah</span>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username" required autofocus>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                    <button type="button" class="password-toggle" id="passwordToggle">
+                        <i data-lucide="eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="login-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    Ingat saya
+                </label>
+                <a href="#" class="forgot-link">Lupa password?</a>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="btn-text">Masuk</span>
+                <span class="btn-loader" style="display:none;">
+                    <i data-lucide="loader-circle" class="spin"></i>
+                </span>
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            &copy; 2024 BankManager. All rights reserved.
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Password toggle
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordInput = document.getElementById('password');
+            
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
+                lucide.createIcons();
+            });
+            
+            // Login form
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = loginBtn.querySelector('.btn-text');
+            const btnLoader = loginBtn.querySelector('.btn-loader');
+            const loginError = document.getElementById('loginError');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const rememberMe = document.getElementById('rememberMe').checked;
+                
+                if (!username || !password) {
+                    showError('Username dan password harus diisi');
+                    return;
+                }
+                
+                // Show loading state
+                loginBtn.classList.add('loading');
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline';
+                loginError.classList.remove('show');
+                
+                try {
+                    // Simulate authentication
+                    // In production, this would call Google Apps Script
+                    const response = await authenticateUser(username, password);
+                    
+                    if (response.success) {
+                        // Save session
+                        const sessionData = {
+                            token: response.token,
+                            user: response.user,
+                            role: response.role,
+                            timestamp: new Date().getTime()
+                        };
+                        
+                        if (rememberMe) {
+                            localStorage.setItem('bankSession', JSON.stringify(sessionData));
+                        } else {
+                            sessionStorage.setItem('bankSession', JSON.stringify(sessionData));
+                        }
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'index.html';
+                    } else {
+                        showError(response.message || 'Login gagal');
+                    }
+                } catch (error) {
+                    showError('Terjadi kesalahan, silakan coba lagi');
+                    console.error('Login error:', error);
+                } finally {
+                    loginBtn.classList.remove('loading');
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                }
+            });
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                loginError.classList.add('show');
+                setTimeout(() => {
+                    loginError.classList.remove('show');
+                }, 5000);
+            }
+            
+            // Auto login if session exists
+            const session = JSON.parse(localStorage.getItem('bankSession') || sessionStorage.getItem('bankSession') || 'null');
+            if (session && session.token) {
+                // Check if session is still valid
+                const now = new Date().getTime();
+                if (now - session.timestamp < 30 * 60 * 1000) { // 30 minutes
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+        
+        // Mock authentication function
+        async function authenticateUser(username, password) {
+            // In production, this would call Google Apps Script API
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Demo credentials
+                    if (username === 'admin' && password === 'admin123') {
+                        resolve({
+                            success: true,
+                            token: 'demo_token_' + Date.now(),
+                            user: 'Administrator',
+                            role: 'LEADER'
+                        });
+                    } else {
+                        resolve({
+                            success: false,
+                            message: 'Username atau password salah'
+                        });
+                    }
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>

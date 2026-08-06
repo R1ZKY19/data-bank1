@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Management Dashboard</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i data-lucide="building2"></i>
+                    </div>
+                    <span class="logo-text">BankManager</span>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item active" data-page="dashboard">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>Dashboard</span>
+                    </div>
+                    <div class="nav-item" data-page="data-bank">
+                        <i data-lucide="database"></i>
+                        <span>Data Bank</span>
+                    </div>
+                    <div class="nav-item" data-page="tambah-data">
+                        <i data-lucide="plus-circle"></i>
+                        <span>Tambah Data</span>
+                    </div>
+                    <div class="nav-item" data-page="riwayat">
+                        <i data-lucide="history"></i>
+                        <span>Riwayat</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item" data-page="import">
+                        <i data-lucide="upload"></i>
+                        <span>Import</span>
+                    </div>
+                    <div class="nav-item" data-page="export">
+                        <i data-lucide="download"></i>
+                        <span>Export</span>
+                    </div>
+                    <div class="nav-item" data-page="laporan">
+                        <i data-lucide="file-text"></i>
+                        <span>Laporan</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-item" data-page="pengguna">
+                        <i data-lucide="users"></i>
+                        <span>Pengguna</span>
+                    </div>
+                    <div class="nav-item" data-page="pengaturan">
+                        <i data-lucide="settings"></i>
+                        <span>Pengaturan</span>
+                    </div>
+                    <div class="nav-item" data-page="profil">
+                        <i data-lucide="user"></i>
+                        <span>Profil</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section bottom">
+                    <div class="nav-item logout" id="logoutBtn">
+                        <i data-lucide="log-out"></i>
+                        <span>Logout</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="top-bar-right">
+                    <div class="search-box">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Cari data..." id="globalSearch">
+                    </div>
+                    <div class="top-bar-actions">
+                        <button class="icon-btn" id="notifBtn">
+                            <i data-lucide="bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                        <div class="user-profile">
+                            <div class="avatar" id="userAvatar">
+                                <span id="userInitial">A</span>
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name" id="userName">Admin</span>
+                                <span class="user-role" id="userRole">LEADER</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Page Content -->
+            <div class="page-content" id="pageContent">
+                <!-- Dashboard Page -->
+                <div class="page active" id="page-dashboard">
+                    <div class="stats-grid" id="statsGrid">
+                        <!-- Stats cards will be rendered here -->
+                    </div>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Data per Bank</h3>
+                                <select class="chart-filter" id="bankChartFilter">
+                                    <option value="all">Semua Bank</option>
+                                </select>
+                            </div>
+                            <canvas id="bankChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Data per Status</h3>
+                            </div>
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card full">
+                        <div class="chart-header">
+                            <h3>Data per Group</h3>
+                        </div>
+                        <canvas id="groupChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Data Bank Page -->
+                <div class="page" id="page-data-bank">
+                    <div class="table-toolbar">
+                        <div class="toolbar-left">
+                            <div class="filter-group">
+                                <select id="filterBank" class="filter-select">
+                                    <option value="">Semua Bank</option>
+                                </select>
+                                <select id="filterGroup" class="filter-select">
+                                    <option value="">Semua Group</option>
+                                </select>
+                                <select id="filterStatus" class="filter-select">
+                                    <option value="">Semua Status</option>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Expired">Expired</option>
+                                    <option value="Nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn btn-primary" id="refreshData">
+                                <i data-lucide="refresh-cw"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Bank</th>
+                                    <th>Group</th>
+                                    <th>Nama Rekening</th>
+                                    <th>Nomor Rekening</th>
+                                    <th>Nomor HP</th>
+                                    <th>Masa Aktif</th>
+                                    <th>Status</th>
+                                    <th>Sisa Hari</th>
+                                    <th>Update</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Data will be rendered here -->
+                            </tbody>
+                        </table>
+                        
+                        <div class="table-footer">
+                            <div class="table-info">
+                                Menampilkan <span id="startRow">1</span> - <span id="endRow">10</span> dari <span id="totalRows">0</span> data
+                            </div>
+                            <div class="table-pagination">
+                                <button class="pagination-btn" id="prevPage" disabled>
+                                    <i data-lucide="chevron-left"></i>
+                                </button>
+                                <span id="currentPage">1</span>
+                                <button class="pagination-btn" id="nextPage">
+                                    <i data-lucide="chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other pages will be similar structure -->
+                <div class="page" id="page-tambah-data">
+                    <div class="form-container">
+                        <h2>Tambah Data Bank</h2>
+                        <form id="addDataForm">
+                            <!-- Form fields -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Drawer -->
+        <div class="drawer-overlay" id="drawerOverlay"></div>
+        <div class="drawer" id="drawer">
+            <div class="drawer-header">
+                <h3>Detail Data</h3>
+                <button class="drawer-close" id="drawerClose">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="drawer-body" id="drawerBody">
+                <!-- Detail content will be rendered here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/data-table.js"></script>
+    <script src="js/drawer.js"></script>
+    <script src="js/forms.js"></script>
+    <script src="js/import-export.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
