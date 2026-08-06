@@ -13,7 +13,7 @@ const DataTable = {
         group: '',
         status: ''
     },
-    API_URL: '', // Isi dengan URL Google Apps Script Anda
+    API_URL: 'https://script.google.com/macros/s/AKfycbw0H8cbgkuxhravOnkLTqta6Js5QZ8_o85BW-y1Pjjk0c1J76ZSHmBWxznTsI6wHP1j/exec', // Isi dengan URL Google Apps Script Anda
     
     /**
      * Initialize data table
