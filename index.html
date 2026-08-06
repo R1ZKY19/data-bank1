@@ -19,12 +19,15 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563EB">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
     <div id="app">
-        <!-- Sidebar -->
+        <!-- ============ SIDEBAR ============ -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
@@ -48,7 +51,6 @@
                         <i data-lucide="database"></i>
                         <span>Data Bank</span>
                     </div>
-                    <!-- HAPUS: Tambah Data dari sini -->
                     <div class="nav-item" data-page="riwayat">
                         <i data-lucide="history"></i>
                         <span>Riwayat</span>
@@ -94,7 +96,7 @@
             </nav>
         </aside>
         
-        <!-- Main Content -->
+        <!-- ============ MAIN CONTENT ============ -->
         <main class="main-content">
             <!-- Top Bar -->
             <header class="top-bar">
@@ -112,7 +114,7 @@
                     <div class="top-bar-actions">
                         <button class="icon-btn" id="notifBtn">
                             <i data-lucide="bell"></i>
-                            <span class="badge">0</span>
+                            <span class="badge" id="notifBadge">0</span>
                         </button>
                         <div class="user-profile">
                             <div class="avatar" id="userAvatar">
@@ -129,10 +131,11 @@
             
             <!-- Page Content -->
             <div class="page-content" id="pageContent">
-                <!-- ============ DASHBOARD PAGE ============ -->
+                
+                <!-- ========== DASHBOARD ========== -->
                 <div class="page active" id="page-dashboard">
                     <div class="stats-grid" id="statsGrid">
-                        <!-- Stats cards will be rendered here -->
+                        <!-- Stats will be rendered by JS -->
                     </div>
                     
                     <div class="charts-grid">
@@ -158,7 +161,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ DATA BANK PAGE ============ -->
+                <!-- ========== DATA BANK ========== -->
                 <div class="page" id="page-data-bank">
                     <div class="table-toolbar">
                         <div class="toolbar-left">
@@ -207,7 +210,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
-                                <!-- Data will be rendered here -->
+                                <!-- Data will be rendered by JS -->
                             </tbody>
                         </table>
                         
@@ -228,7 +231,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ RIWAYAT PAGE ============ -->
+                <!-- ========== RIWAYAT ========== -->
                 <div class="page" id="page-riwayat">
                     <div class="card">
                         <h3 style="margin-bottom:16px;">
@@ -259,7 +262,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ IMPORT PAGE ============ -->
+                <!-- ========== IMPORT ========== -->
                 <div class="page" id="page-import">
                     <div class="card">
                         <h3 style="margin-bottom:16px;">
@@ -293,7 +296,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ EXPORT PAGE ============ -->
+                <!-- ========== EXPORT ========== -->
                 <div class="page" id="page-export">
                     <div class="card">
                         <h3 style="margin-bottom:16px;">
@@ -325,7 +328,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ LAPORAN PAGE ============ -->
+                <!-- ========== LAPORAN ========== -->
                 <div class="page" id="page-laporan">
                     <div class="card">
                         <h3 style="margin-bottom:16px;">
@@ -338,7 +341,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ PENGGUNA PAGE ============ -->
+                <!-- ========== PENGGUNA ========== -->
                 <div class="page admin-only" id="page-pengguna">
                     <div class="card">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
@@ -374,7 +377,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ PENGATURAN PAGE ============ -->
+                <!-- ========== PENGATURAN ========== -->
                 <div class="page admin-only" id="page-pengaturan">
                     <div class="card">
                         <h3 style="margin-bottom:16px;">
@@ -416,7 +419,7 @@
                     </div>
                 </div>
                 
-                <!-- ============ PROFIL PAGE ============ -->
+                <!-- ========== PROFIL ========== -->
                 <div class="page" id="page-profil">
                     <div class="card" style="max-width:600px;margin:0 auto;">
                         <div style="text-align:center;padding:24px 0;">
@@ -452,10 +455,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                
+            </div><!-- end page-content -->
         </main>
         
-        <!-- Drawer -->
+        <!-- ============ DRAWER ============ -->
         <div class="drawer-overlay" id="drawerOverlay"></div>
         <div class="drawer" id="drawer">
             <div class="drawer-header">
@@ -471,103 +475,104 @@
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Modal Tambah Data -->
-    <div class="modal-overlay" id="addDataModal">
-        <div class="modal" style="max-width:700px;max-height:90vh;overflow-y:auto;">
-            <div class="modal-header">
-                <h3>
-                    <i data-lucide="plus-circle" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
-                    Tambah Data Bank
-                </h3>
-                <button class="modal-close" id="closeAddDataModal">
-                    <i data-lucide="x"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addDataFormModal">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Bank <span class="required">*</span></label>
-                            <input type="text" id="modalBank" name="bank" placeholder="Contoh: BCA" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Group <span class="required">*</span></label>
-                            <input type="text" id="modalGroup" name="group" placeholder="Contoh: Group A" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Rekening <span class="required">*</span></label>
-                            <input type="text" id="modalNama" name="nama" placeholder="Nama pemilik rekening" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor Rekening <span class="required">*</span></label>
-                            <input type="text" id="modalNoRekening" name="noRekening" placeholder="Contoh: 1234567890" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor HP <span class="required">*</span></label>
-                            <input type="text" id="modalNoHP" name="noHP" placeholder="Contoh: 081234567890" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Masa Aktif <span class="required">*</span></label>
-                            <input type="date" id="modalMasaAktif" name="masaAktif" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Status <span class="required">*</span></label>
-                            <select id="modalStatus" name="status" required>
-                                <option value="Aktif">Aktif</option>
-                                <option value="Expired">Expired</option>
-                                <option value="Nonaktif">Nonaktif</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal Cek</label>
-                            <input type="date" id="modalTanggalCek" name="tanggalCek">
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top:16px;border-top:1px solid var(--gray-200);padding-top:16px;">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        
+        <!-- ============ MODAL TAMBAH DATA ============ -->
+        <div class="modal-overlay" id="addDataModal">
+            <div class="modal" style="max-width:700px;max-height:90vh;overflow-y:auto;">
+                <div class="modal-header">
+                    <h3>
+                        <i data-lucide="plus-circle" style="width:20px;height:20px;display:inline-block;vertical-align:middle;"></i>
+                        Tambah Data Bank
+                    </h3>
+                    <button class="modal-close" id="closeAddDataModal">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDataFormModal">
+                        <div class="form-grid">
                             <div class="form-group">
-                                <label>User ID</label>
-                                <input type="text" id="modalUserId" name="userId" placeholder="User ID Internet Banking">
+                                <label>Bank <span class="required">*</span></label>
+                                <input type="text" id="modalBank" name="bank" placeholder="Contoh: BCA" required>
                             </div>
                             <div class="form-group">
-                                <label>PIN Login</label>
-                                <input type="password" id="modalPinLogin" name="pinLogin" placeholder="PIN Login">
+                                <label>Group <span class="required">*</span></label>
+                                <input type="text" id="modalGroup" name="group" placeholder="Contoh: Group A" required>
                             </div>
                             <div class="form-group">
-                                <label>PIN Proses</label>
-                                <input type="password" id="modalPinProses" name="pinProses" placeholder="PIN Proses">
+                                <label>Nama Rekening <span class="required">*</span></label>
+                                <input type="text" id="modalNama" name="nama" placeholder="Nama pemilik rekening" required>
                             </div>
                             <div class="form-group">
-                                <label>ID IB</label>
-                                <input type="text" id="modalIdIb" name="idIb" placeholder="ID Internet Banking">
+                                <label>Nomor Rekening <span class="required">*</span></label>
+                                <input type="text" id="modalNoRekening" name="noRekening" placeholder="Contoh: 1234567890" required>
                             </div>
-                            <div class="form-group" style="grid-column:1/-1;">
-                                <label>Password IB</label>
-                                <input type="password" id="modalPasswordIb" name="passwordIb" placeholder="Password Internet Banking">
+                            <div class="form-group">
+                                <label>Nomor HP <span class="required">*</span></label>
+                                <input type="text" id="modalNoHP" name="noHP" placeholder="Contoh: 081234567890" required>
                             </div>
-                            <div class="form-group" style="grid-column:1/-1;">
-                                <label>Catatan</label>
-                                <textarea id="modalCatatan" name="catatan" rows="2" placeholder="Catatan tambahan..."></textarea>
+                            <div class="form-group">
+                                <label>Masa Aktif <span class="required">*</span></label>
+                                <input type="date" id="modalMasaAktif" name="masaAktif" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status <span class="required">*</span></label>
+                                <select id="modalStatus" name="status" required>
+                                    <option value="Aktif">Aktif</option>
+                                    <option value="Expired">Expired</option>
+                                    <option value="Nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tanggal Cek</label>
+                                <input type="date" id="modalTanggalCek" name="tanggalCek">
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelAddData">
-                    <i data-lucide="x"></i> Batal
-                </button>
-                <button class="btn btn-primary" id="submitAddData">
-                    <i data-lucide="save"></i> Simpan Data
-                </button>
+                        
+                        <div style="margin-top:16px;border-top:1px solid var(--gray-200);padding-top:16px;">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                                <div class="form-group">
+                                    <label>User ID</label>
+                                    <input type="text" id="modalUserId" name="userId" placeholder="User ID Internet Banking">
+                                </div>
+                                <div class="form-group">
+                                    <label>PIN Login</label>
+                                    <input type="password" id="modalPinLogin" name="pinLogin" placeholder="PIN Login">
+                                </div>
+                                <div class="form-group">
+                                    <label>PIN Proses</label>
+                                    <input type="password" id="modalPinProses" name="pinProses" placeholder="PIN Proses">
+                                </div>
+                                <div class="form-group">
+                                    <label>ID IB</label>
+                                    <input type="text" id="modalIdIb" name="idIb" placeholder="ID Internet Banking">
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label>Password IB</label>
+                                    <input type="password" id="modalPasswordIb" name="passwordIb" placeholder="Password Internet Banking">
+                                </div>
+                                <div class="form-group" style="grid-column:1/-1;">
+                                    <label>Catatan</label>
+                                    <textarea id="modalCatatan" name="catatan" rows="2" placeholder="Catatan tambahan..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="cancelAddData">
+                        <i data-lucide="x"></i> Batal
+                    </button>
+                    <button class="btn btn-primary" id="submitAddData">
+                        <i data-lucide="save"></i> Simpan Data
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+        
+    </div><!-- end app -->
     
-    <!-- JavaScript -->
+    <!-- ============ JAVASCRIPT ============ -->
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/charts.js"></script>
@@ -579,9 +584,11 @@
     <script src="js/app.js"></script>
     
     <script>
-        // Initialize Lucide icons
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Lucide icons after DOM loaded
+        document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();
+            console.log('✅ BankManager Dashboard loaded successfully!');
+            console.log('🔗 Google Apps Script URL: https://script.google.com/macros/s/AKfycbw0H8cbgkuxhravOnkLTqta6Js5QZ8_o85BW-y1Pjjk0c1J76ZSHmBWxznTsI6wHP1j/exec');
         });
     </script>
 </body>
